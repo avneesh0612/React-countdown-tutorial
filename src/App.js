@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
+  const calculateTimeLeft = () => {
+    const difference = +new Date("2022-02-28T18:20:00+05:30") - +new Date();
+    let timeLeft = {};
+
+    if (difference > 0) {
+      timeLeft = {
+        hours: Math.floor(difference / (1000 * 60 * 60)),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      };
+    }
+
+    return timeLeft;
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+
+  useEffect(() => {
+    setTimeout(() => {
+      setTimeLeft(calculateTimeLeft());
+    }, 1000);
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+      {timeLeft.hours || timeLeft.minutes || timeLeft.seconds ? (
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          <span>{timeLeft.hours}</span>
+          <span>:</span>
+          <span>{timeLeft.minutes}</span>
+          <span>:</span>
+          <span>{timeLeft.seconds}</span>
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      ) : (
+        <p>Time is up 🔥</p>
+      )}
     </div>
   );
 }
